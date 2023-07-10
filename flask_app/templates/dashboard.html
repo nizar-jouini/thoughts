@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="d-flex justify-content-between align-items-center col-12">
+        <h1 class="text-center">Welcome {{ logged_user.first_name }} {{ logged_user.last_name }}!</h1>
+        <div class="d-flex col-4 justify-content-around">
+            <a href="/logout" class="btn btn-info">Logout</a>
+        </div>
+    </nav>
+    <form action="/posts/new" method="post">
+        <div class="container">
+            {% with messages = get_flashed_messages(category_filter=['post']) %}
+                {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Error!!!!</strong>
+                            {% for message in messages %}
+                            <p>{{message}}</p>
+                            {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="d-flex justify-content-around mt-5">
+                <input type="text" name="post" class="col-8" placeholder="Post a thought here">
+                <input type="hidden" value="{{ logged_user.id }}" name="user_id">
+                <input type="submit" class="col-2" value="Add Thought">
+            </div>
+            <hr>
+        </div>
+    </form>
+    <div class="col-8 mx-auto">
+        <table class="table table-hover">
+            <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td>
+                            <a href="/users/{{ post.user.id }}" class="col-5"><u>{{ post.user.first_name }} {{ post.user.last_name }}</u></a>
+                        </td>
+                        <div class="container">
+                            <td>
+                                <p class="border border-info border-3 p-2">{{ post.post }}</p>
+                                <div class="d-flex justify-content-between">
+                                    {% if session.user_id in post.user_ids_who_liked %}
+                                        <a href="/posts/unlike/{{ post.id }}" class="btn btn-danger"><u>Un-Like</u></a>
+                                    {% else %}
+                                        <a href="/posts/like/{{ post.id }}" class="btn btn-primary"><u>Like</u></a>
+                                    {% endif %}
+                                    
+                                    {{post.user_ids_who_liked | length}} likes
+                                </div>
+                            </td>
+                        </div>
+                        <td>
+                            {% if post.user.id == logged_user.id %}
+                                <a href="/posts/delete/{{ post.id }}" class="col-3 mx-3"><u>Delete</u></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

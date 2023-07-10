@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="d-flex justify-content-between align-items-center col-12">
+        <h1 class="text-center">Welcome {{ logged_user.first_name }} {{ logged_user.last_name }}!</h1>
+        <div class="d-flex col-4 justify-content-around">
+            <a href="/thoughts"><u>Dashboard</u></a>
+            <a href="/logout" class="btn btn-info">Logout</a>
+        </div>
+    </nav>
+    <div class="card col-10 mx-auto my-5 bg-dark text-light">
+        <div class="card-body">
+            
+            <table class="table table-hover text-white">
+                <tbody>
+                    <h5 class="card-text">{{post[0].user.first_name}}'s Thoughts</h5>
+                    {% for post in post %}
+                    
+                        <tr>
+                            <td>
+                                
+                                {{post.post}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
